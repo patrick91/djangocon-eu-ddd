@@ -1,7 +1,10 @@
+from datetime import date
 from typing import Any, Optional
 
 import strawberry
 from strawberry.types import Info
+
+from app.events.services import create_event
 
 from .context import Context
 from .events.types import Event
@@ -19,4 +22,15 @@ class Query:
         return None
 
 
-schema = strawberry.Schema(Query)
+@strawberry.type
+class Mutation:
+    @strawberry.mutation
+    def create_event(self, info: Info[Context, Any], title: str, start_date: date) -> Event:
+        domain_event = create_event(
+            title=title, start_date=start_date, repository=info.context.event_repository
+        )
+
+        return Event.from_domain(domain_event)
+
+
+schema = strawberry.Schema(Query, Mutation)
