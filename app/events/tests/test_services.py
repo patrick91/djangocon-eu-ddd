@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from typing import Optional
 
 import pytest
 from app.events.entities import Event
@@ -7,6 +8,9 @@ from app.events.services import create_event
 
 
 class EventTestRepository:
+    def get(self, id: str) -> Optional[Event]:
+        return None
+
     def save(self, event: Event) -> Event:
         return event
 
